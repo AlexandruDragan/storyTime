@@ -25,6 +25,7 @@
       container.innerHTML = '';
       container.appendChild(iframe);
     }
-    document.addEventListener('DOMContentLoaded', createScaledIframe);
+    
+    createScaledIframe();
     window.addEventListener('resize', createScaledIframe);
   })();
