@@ -1,4 +1,6 @@
 (function() {
+    let isMobile = window.innerWidth <= 991;
+
     function createScaledIframe() {
       const container = document.querySelector('.iframe-container[data-url]');
       if (!container) {
@@ -11,21 +13,46 @@
       const simulatedWidth = 1800;
       const simulatedHeight = 1012;
       const containerWidth = container.offsetWidth;
-      const scaleFactor = containerWidth / simulatedWidth;
-      const iframe = document.createElement('iframe');
-      iframe.src = iframeUrl;
-      iframe.setAttribute('allowfullscreen', '');
-      iframe.setAttribute('fetchpriority', 'high');
-      iframe.setAttribute('rel', 'preload');
-      iframe.style.width = `${simulatedWidth}px`;
-      iframe.style.height = `${simulatedHeight}px`;
-      iframe.style.transform = `scale(${scaleFactor})`;
-      iframe.style.transformOrigin = '0 0';
-      iframe.style.border = 'none';
-      container.innerHTML = '';
-      container.appendChild(iframe);
+
+      let iframe = container.querySelector('iframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.src = iframeUrl;
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('fetchpriority', 'high');
+        iframe.setAttribute('rel', 'preload');
+        iframe.style.border = 'none';
+        container.innerHTML = '';
+        container.appendChild(iframe);
+      }
+      
+      const isMobileNow = window.innerWidth <= 991;
+
+      if (isMobileNow) {
+        if (!isMobile) {
+          iframe.src = iframeUrl;
+        }
+        iframe.style.transform = 'none';
+        container.style.height = '80dvh';
+        container.style.maxHeight = '80dvh';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+      } else {
+        if (isMobile) {
+          iframe.src = iframeUrl;
+        }
+        const scaleFactor = containerWidth / simulatedWidth;
+        iframe.style.width = `${simulatedWidth}px`;
+        iframe.style.height = `${simulatedHeight}px`;
+        iframe.style.transform = `scale(${scaleFactor})`;
+        iframe.style.transformOrigin = '0 0';
+        container.style.height = 'auto';
+        container.style.maxHeight = 'none';
+      }
+      
+      isMobile = isMobileNow;
     }
     
-    createScaledIframe();
+    document.addEventListener('DOMContentLoaded', createScaledIframe);
     window.addEventListener('resize', createScaledIframe);
   })();
