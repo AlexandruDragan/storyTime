@@ -23,10 +23,19 @@
         iframe.setAttribute('rel', 'preload');
         iframe.style.border = 'none';
         iframe.className = 'storybook_iframe';
-        
-        // Add the new inline style here
         iframe.style.maxWidth = 'unset';
         
+        // Listen for the iframe's load event to resize the container
+        iframe.onload = () => {
+          if (!isMobile) {
+            // Recalculate and set the container height after the iframe loads
+            const scaleFactor = containerWidth / simulatedWidth;
+            const scaledHeight = simulatedHeight * scaleFactor;
+            container.style.height = `${scaledHeight}px`;
+            container.style.maxHeight = `${scaledHeight}px`;
+          }
+        };
+
         container.innerHTML = '';
         container.appendChild(iframe);
       }
@@ -47,12 +56,14 @@
           iframe.src = iframeUrl;
         }
         const scaleFactor = containerWidth / simulatedWidth;
+        const scaledHeight = simulatedHeight * scaleFactor;
+
         iframe.style.width = `${simulatedWidth}px`;
         iframe.style.height = `${simulatedHeight}px`;
         iframe.style.transform = `scale(${scaleFactor})`;
         iframe.style.transformOrigin = '0 0';
-        container.style.height = 'auto';
-        container.style.maxHeight = 'none';
+        container.style.height = `${scaledHeight}px`;
+        container.style.maxHeight = `${scaledHeight}px`;
       }
       
       isMobile = isMobileNow;
