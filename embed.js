@@ -22,6 +22,11 @@
         iframe.setAttribute('fetchpriority', 'high');
         iframe.setAttribute('rel', 'preload');
         iframe.style.border = 'none';
+        iframe.className = 'storybook_iframe';
+        
+        // Add the new inline style here
+        iframe.style.maxWidth = 'unset';
+        
         container.innerHTML = '';
         container.appendChild(iframe);
       }
